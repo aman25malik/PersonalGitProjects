@@ -1,0 +1,76 @@
+openapi: 3.0.0
+info:
+  title: Task Flow API
+  version: 1.0.0
+  
+paths:
+  /tasks:
+    get:
+      summary: Get all Tasks
+      responses:
+        '200':
+          description: Return a list of tasks
+      
+    post:
+      summary: Create a new Task
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: "Task Title"
+                description:
+                  type: string
+                  example: "Task Description"
+      responses:
+        '201':
+          description: Task created
+  
+  /tasks/{taskID}:
+    get:
+      summary: Get a specific Task by ID
+      parameters:
+      - in: path
+        name: taskID
+        schema:
+          type: string
+        required: True
+        description: Task ID
+        
+      responses:
+        '200':
+         description: Return a single task
+    
+    put:
+      summary: Update a by ID
+      parameters:
+      - in: path
+        name: taskID
+        schema:
+          type: string
+        required: True
+        description: Task ID
+      
+      responses:
+        '200': 
+          description: Updated a single task
+      
+    delete:
+      summary: Delete a specific task by ID
+      parameters:
+      - in: path
+        name: taskID
+        schema:
+          type: string
+        required: True
+        description: Task ID
+        
+      responses:
+        '204':
+         description: Delete a singel task
+      
+  
