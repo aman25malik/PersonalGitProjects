@@ -1,35 +1,61 @@
-#### Setup Guide:
+# TaskFlow Project
 
-- install Node.js, Docker, Python, SQLite, AWS CLI
+## Setup Guide
 
-- install SwaggerEditor through docker: 
-    - "docker pull swaggerapi/swagger-editor"
-    - "docker run -d -p 8081:8080 swaggerapi/swagger-editor"
-    (SwaggerEditor enables editing OpenAPI definitions)
+1. **Install Dependencies:**
+   - Install Node.js, Docker, Python, SQLite, AWS CLI.
 
-npm install sqlite3
+2. **Install Swagger Editor:**
+   - Pull the Docker image:
+     ```bash
+     docker pull swaggerapi/swagger-editor
+     ```
+   - Run the Swagger Editor:
+     ```bash
+     docker run -d -p 8081:8080 swaggerapi/swagger-editor
+     ```
+   - Swagger Editor enables editing OpenAPI definitions.
+
+3. **Install SQLite3 for Node.js:**
+   - Install the SQLite3 package:
+     ```bash
+     npm install sqlite3
+     ```
+
+4. **Database Setup:**
+   - Created an SQLite3 database named `TaskFlowDB.db`.
+
+5. **Basic Testing:**
+   - Start the Node.js application:
+     ```bash
+     node app.js
+     ```
+   - This should connect to port 3000.
+
+## API Testing with cURL
+
+1. **GET /tasks**
+  ```bash
+  curl http://localhost:3000/tasks
+    ``` 
+2. **POST /tasks** 
+    ```bash
+    curl -X POST http://localhost:3000/tasks -H "Content-Type: application/json" -d '{"title": "New Task", "description": "Task description"}'
+    ```
+3. **GET /tasks** (byID)
+    ```bash 
+    curl http://localhost:3000/tasks/:id
+    ```
+4. **PUT /tasks/** (byID)
+    ```bash
+    curl -X PUT http://localhost:3000/tasks/:id -H "Content-Type: application/json" -d '{"title": "Updated Task", "description": "Updated description"}'
+    ```
+5. **DELETE /tasks/** (byID)
+    ```bash
+    curl -X DELETE http://localhost:3000/tasks/:id
+    ```
 
 
-API definitions are defined with OpenAPI swagger. Utilize Prism to define your data models and automatically generate SQL queries for creating, reading, updating, and deleting records in the database.
 
-Created a sqlite3 db TaskFlowDB.db
 
-Basic testing:
-node app.js
-    -> should connect to port 3000
 
-##CLI testing for app.js:
-GET /tasks
-curl http://localhost:3000/tasks
-
-POST /tasks
-curl -X POST http://localhost:3000/tasks -H "Content-Type: application/json" -d '{"title": "New Task", "description": "Task description"}'
-
-GET /tasks/
-curl http://localhost:3000/tasks/:id
-
-PUT /tasks/
-curl -X PUT http://localhost:3000/tasks/:id -H "Content-Type: application/json" -d '{"title": "Updated Task", "description": "Updated description"}'
-
-DELETE /tasks/
-curl -X DELETE http://localhost:3000/tasks/id
