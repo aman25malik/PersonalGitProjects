@@ -46,13 +46,13 @@ paths:
          description: Return a single task
     
     put:
-      summary: Update a by ID
+      summary: Update a task by ID
       parameters:
       - in: path
         name: taskID
         schema:
           type: string
-        required: True
+        required: true
         description: Task ID
       
       responses:
@@ -66,11 +66,11 @@ paths:
         name: taskID
         schema:
           type: string
-        required: True
+        required: true
         description: Task ID
         
       responses:
         '204':
-         description: Delete a singel task
+         description: Delete a single task
       
   

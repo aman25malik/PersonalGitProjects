@@ -1,0 +1,118 @@
+openapi: 3.0.0
+info:
+  title: User API
+  version: 1.0.0
+  
+paths:
+  /user:
+    get:
+      summary: Get all Users
+      responses:
+        '200':
+          description: Return a list of Users
+    post:
+      summary: Create a new User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "John Doe"
+                email:
+                  type: string
+                  example: "john.doe@example.com"
+                password:
+                  type: string
+                  example: "securepassword"
+
+      responses:
+        '201':
+          description: User created
+  
+  /user/{userID}:
+    get:
+      summary: Get a specific User by ID
+      parameters:
+      - in: path
+        name: userID
+        schema:
+          type: string
+        required: true
+        description: User ID
+        
+      responses:
+        '200':
+         description: Return a single user
+    
+    put:
+      summary: Update a user by ID
+      parameters:
+      - in: path
+        name: userID
+        schema:
+          type: string
+        required: true
+        description: User ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "Updated Name"
+                email:
+                  type: string
+                  example: "updated.email@example.com"
+                password:
+                  type: string
+                  example: "newsecurepassword"
+          
+      responses:
+        '200': 
+          description: Updated a single user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  email:
+                    type: string
+                  password:
+                    type: string
+        '404':
+          description: User not found
+      
+    delete:
+      summary: Delete a specific User by ID
+      parameters:
+      - in: path
+        name: userID
+        schema:
+          type: string
+        required: true
+        description: User ID
+        
+      responses:
+        '200':
+          description: User deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "User successfully deleted"
+        '404':
+          description: User not found
