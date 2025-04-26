@@ -1,64 +1,82 @@
 const express = require('express');
-const { db, close } = require('./database');
+const { PrismaClient } = require('@prisma/client');
 
 const app = express();
+const prisma = new PrismaClient();
 app.use(express.json());
 
-// Example route to get all tasks
-app.get('/tasks', (req, res) => {
-  db.all('SELECT * FROM Task', [], (err, rows) => {
-    if (err) {
-      throw err;
-    }
-    res.json(rows);
-  });
+//GET all tasks
+app.get('/tasks', async (req, res) => {
+  try {
+    const tasks = await prisma.task.findMany();
+    res.json(tasks);
+  } catch (error) {
+    res.status(500).json({ error: 'Something went wrong' });
+  }
 });
 
-// Example route to create a new task
-app.post('/tasks', (req, res) => {
+//CREATE new task
+app.post('/tasks', async (req, res) => {
   const { title, description } = req.body;
-  db.run('INSERT INTO Task (title, description) VALUES (?, ?)', [title, description], function(err) {
-    if (err) {
-      return console.error(err.message);
-    }
-    res.status(201).json({ id: this.lastID, title, description });
-  });
+  try{
+    const newTask = await prisma.task.create({
+      data: {
+        title: title,
+        description: description
+      }
+    });
+    res.status(201).json(newTask);
+  }
+  catch (error){
+    res.status(500).json({ error: 'Something went wrong' });
+  }
 });
 
-// Example route to get a task by ID
-app.get('/tasks/:id', (req, res) => {
-  const id = req.params.id;
-  db.get('SELECT * FROM Task WHERE id = ?', [id], (err, row) => {
-    if (err) {
-      throw err;
-    }
-    res.json(row);
-  });
+//GET task by ID
+app.get('/tasks/:id', async (req, res) => {
+  const taskId = parseInt(req.params.id, 10);
+  try{
+    const task = await prisma.task.findUnique({ where: {id: taskId}});
+    res.status(200).json(task);
+  }
+  catch (error) {
+    res.status(500).json({ error: 'Something went wrong' });
+  }
+  
 });
 
-// Example route to update a task by ID
-app.put('/tasks/:id', (req, res) => {
-  const id = req.params.id;
-  const { title, description } = req.body;
-  db.run('UPDATE Task SET title = ?, description = ? WHERE id = ?', [title, description, id], function(err) {
-    if (err) {
-      return console.error(err.message);
-    }
-    res.json({ id, title, description });
-  });
+//POST update task by ID
+app.put('/tasks/:id', async (req, res) => {
+  const taskId = parseInt(req.params.id, 10);
+  try{
+    const taskUpdate = await prisma.task.update({
+      where: {id: taskId},
+      data: {
+        title: title,
+        description: description
+      },
+    })
+    res.status(201).json(taskUpdate);
+  }
+  catch(error){
+    res.status(500).json({ error: 'Something went wrong' });
+  }
 });
 
 // Example route to delete a task by ID
-app.delete('/tasks/:id', (req, res) => {
-  const id = req.params.id;
-  db.run('DELETE FROM Task WHERE id = ?', [id], function(err) {
-    if (err) {
-      return console.error(err.message);
-    }
-    res.status(204).end();
-  });
+app.delete('/tasks/:id', async (req, res) => {
+  const taskId = parseInt(req.params.id, 10);
+  try{
+    const deleteTask = await prisma.task.delete({ where: {
+      id: taskId,
+    }});
+    res.status(201).json(deleteTask);
+  }
+  catch (error){
+    res.status(500).json({ error: 'Something went wrong' });
+  }
 });
-
+  
 // Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

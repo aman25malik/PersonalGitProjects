@@ -1,6 +1,6 @@
 datasource db {
   provider = "sqlite"
-  url      = "file:./taskflow.db"
+  url      = "file:./TaskFlowDB.db"
 }
 
 generator client {
