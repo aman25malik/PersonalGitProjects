@@ -8,7 +8,7 @@ import { startMockIncomingPredictions, startMockOutgoingAggregator } from './lib
 
 export default function App() {
   const [patients, setPatients] = useState<Patient[]>(initialPatients)
-  const [selectedId, setSelectedId] = useState<string | null>(patients[0]?.id ?? null)
+  const [selectedId, setSelectedId] = useState<string | null>(null)
   const [search, setSearch] = useState('')
   const [filters, setFilters] = useState<{ triage?: number | null; risk?: string | null; mineOnly?: boolean }>({})
   const currentUser = 'Dr. Smith'
@@ -78,9 +78,15 @@ export default function App() {
         <CommandBoard patients={patients} onSelect={id => setSelectedId(id)} currentUser={currentUser} filters={filters} setSearch={setSearch} search={search} />
       </div>
 
-      <div className="right">
-        <PatientDetail patient={selected} onToggleTask={toggleTask} onAddTask={addTaskForSelected} />
-      </div>
+      {selectedId && (
+        <div className="detail-drawer-wrap">
+          <div className="drawer-backdrop" onClick={() => setSelectedId(null)} />
+          <div className="detail-drawer">
+            <button className="drawer-close" onClick={() => setSelectedId(null)}>Close ✕</button>
+            <PatientDetail patient={selected} onToggleTask={toggleTask} onAddTask={addTaskForSelected} />
+          </div>
+        </div>
+      )}
     </div>
   )
 }

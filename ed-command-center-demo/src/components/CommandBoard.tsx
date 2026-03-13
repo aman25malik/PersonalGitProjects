@@ -5,6 +5,7 @@ import { computeRiskLevel, deriveStatusFromTasksAndEvents } from '../lib/aiSim'
 interface Props {
   patients: Patient[]
   onSelect: (id: string) => void
+  selectedId?: string | null
   currentUser: string
   filters: { triage?: number | null; risk?: string | null; mineOnly?: boolean }
   setSearch: (s: string) => void
@@ -17,7 +18,7 @@ function timeDisplay(mins: number) {
   return `${h}h ${m}m`
 }
 
-export default function CommandBoard({ patients, onSelect, currentUser, filters, setSearch, search }: Props) {
+export default function CommandBoard({ patients, onSelect, selectedId, currentUser, filters, setSearch, search }: Props) {
   const filtered = patients.filter(p => {
     if (filters.triage && p.triageLevel !== filters.triage) return false
     if (filters.risk) {
@@ -56,10 +57,10 @@ export default function CommandBoard({ patients, onSelect, currentUser, filters,
             const status = deriveStatusFromTasksAndEvents(p)
             const hasOverdueHigh = p.tasks.some(t => t.priority === 'high' && t.dueInMinutes <= 0 && t.status !== 'done')
             return (
-              <tr key={p.id} className={`patient-row ${hasOverdueHigh ? 'overdue' : ''}`} onClick={() => onSelect(p.id)}>
+              <tr key={p.id} className={`patient-row ${hasOverdueHigh ? 'overdue' : ''} ${p.id === selectedId ? 'selected' : ''}`} onClick={() => onSelect(p.id)}>
                 <td>
                   {p.name}{hasOverdueHigh && <span className="dot" title="Overdue high priority"></span>}
-                  {p.externalPredictions && <span style={{marginLeft:8, fontSize:12, color:'#1e293b'}} title={`External: ${p.externalPredictions.source}`}>• ext</span>}
+                  {p.externalPredictions && <span className="ext-indicator" title={`External: ${p.externalPredictions.source}`}>• ext</span>}
                 </td>
                 <td>{p.age}</td>
                 <td><span className={`badge triage triage-${p.triageLevel}`}>ESI {p.triageLevel}</span></td>
