@@ -57,7 +57,10 @@ export default function CommandBoard({ patients, onSelect, currentUser, filters,
             const hasOverdueHigh = p.tasks.some(t => t.priority === 'high' && t.dueInMinutes <= 0 && t.status !== 'done')
             return (
               <tr key={p.id} className={`patient-row ${hasOverdueHigh ? 'overdue' : ''}`} onClick={() => onSelect(p.id)}>
-                <td>{p.name}{hasOverdueHigh && <span className="dot" title="Overdue high priority"></span>}</td>
+                <td>
+                  {p.name}{hasOverdueHigh && <span className="dot" title="Overdue high priority"></span>}
+                  {p.externalPredictions && <span style={{marginLeft:8, fontSize:12, color:'#1e293b'}} title={`External: ${p.externalPredictions.source}`}>• ext</span>}
+                </td>
                 <td>{p.age}</td>
                 <td><span className={`badge triage triage-${p.triageLevel}`}>ESI {p.triageLevel}</span></td>
                 <td>{p.chiefComplaint}</td>

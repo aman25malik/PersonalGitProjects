@@ -29,4 +29,10 @@ export interface Patient {
   dispositionEstimate: string
   events: EventItem[]
   tasks: Task[]
+  externalPredictions?: {
+    deteriorationScore?: number
+    admissionProbability?: number
+    source?: string
+    timestamp?: string
+  }
 }

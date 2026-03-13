@@ -1,0 +1,10 @@
+[
+  { "patientId": "p1", "deteriorationScore": 0.65, "admissionProbability": 0.8, "source": "BedOps", "timestamp": "2026-03-13T00:00:00Z" },
+  { "patientId": "p2", "deteriorationScore": 0.2, "admissionProbability": 0.15, "source": "BedOps", "timestamp": "2026-03-13T00:00:00Z" },
+  { "patientId": "p3", "deteriorationScore": 0.05, "admissionProbability": 0.05, "source": "BedOps", "timestamp": "2026-03-13T00:00:00Z" },
+  { "patientId": "p4", "deteriorationScore": 0.9, "admissionProbability": 0.95, "source": "BedOps", "timestamp": "2026-03-13T00:00:00Z" },
+  { "patientId": "p5", "deteriorationScore": 0.1, "admissionProbability": 0.05, "source": "BedOps", "timestamp": "2026-03-13T00:00:00Z" },
+  { "patientId": "p6", "deteriorationScore": 0.95, "admissionProbability": 0.99, "source": "BedOps", "timestamp": "2026-03-13T00:00:00Z" },
+  { "patientId": "p7", "deteriorationScore": 0.15, "admissionProbability": 0.1, "source": "BedOps", "timestamp": "2026-03-13T00:00:00Z" },
+  { "patientId": "p8", "deteriorationScore": 0.4, "admissionProbability": 0.45, "source": "BedOps", "timestamp": "2026-03-13T00:00:00Z" }
+]

@@ -1,9 +1,10 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useState, useRef, useEffect } from 'react'
 import CommandBoard from './components/CommandBoard'
 import PatientDetail from './components/PatientDetail'
 import initialPatients from './data/mockData'
 import { Patient, Task } from './types'
 import { v4 as uuidv4 } from 'uuid'
+import { startMockIncomingPredictions, startMockOutgoingAggregator } from './lib/integration'
 
 export default function App() {
   const [patients, setPatients] = useState<Patient[]>(initialPatients)
@@ -11,6 +12,12 @@ export default function App() {
   const [search, setSearch] = useState('')
   const [filters, setFilters] = useState<{ triage?: number | null; risk?: string | null; mineOnly?: boolean }>({})
   const currentUser = 'Dr. Smith'
+  const [lastIncoming, setLastIncoming] = useState<string | null>(null)
+  const [lastOutgoing, setLastOutgoing] = useState<string | null>(null)
+  const [lastOutgoingStatus, setLastOutgoingStatus] = useState<string | null>(null)
+
+  const patientsRef = useRef<Patient[]>(patients)
+  useEffect(() => { patientsRef.current = patients }, [patients])
 
   const selected = useMemo(() => patients.find(p => p.id === selectedId)!, [patients, selectedId])
 
@@ -34,8 +41,18 @@ export default function App() {
     setPatients(prev => prev.map(p => p.id === selectedId ? { ...p, tasks: [...p.tasks, newTask] } : p))
   }
 
+  // start demo integrations (incoming predictions + outgoing aggregator)
+  useEffect(() => {
+    const stopIncoming = startMockIncomingPredictions(setPatients as any, setLastIncoming)
+    const stopOutgoing = startMockOutgoingAggregator(() => patientsRef.current, setLastOutgoing, setLastOutgoingStatus)
+    return () => { stopIncoming(); stopOutgoing() }
+  }, [])
+
   return (
     <div className="app-shell">
+      <div className="topbar" style={{position:'absolute',left:16,top:8,right:16}}>
+        <small style={{color:'#475569'}}>Last predictions update: {lastIncoming ?? '—'} • Last bedside sync: {lastOutgoing ?? '—'} {lastOutgoingStatus ? `(${lastOutgoingStatus})` : ''}</small>
+      </div>
       <div className="left">
         <div className="controls">
           <div>

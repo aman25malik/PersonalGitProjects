@@ -10,6 +10,11 @@ export function computeRiskLevel(p: Patient): RiskLevel {
   const highPending = p.tasks.filter(t => t.priority === 'high' && t.status !== 'done' && t.dueInMinutes <= 0).length
   score += Math.min(3, highPending * 2)
 
+  // incorporate external deterioration prediction if present (ops command center)
+  const ext = p.externalPredictions?.deteriorationScore ?? 0
+  if (ext >= 0.8) score += 4
+  else if (ext >= 0.5) score += 2
+
   if (score >= 6) return 'high'
   if (score >= 3) return 'medium'
   return 'low'
