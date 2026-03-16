@@ -7,7 +7,7 @@ from openai import OpenAI
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 from config import TELEGRAM_BOT_TOKEN, OPENAI_API_KEY, CATEGORIES
-from parser import parse_message, parse_query
+from task_parser import parse_message, parse_query
 from database import (
     save_message, save_task, complete_task, drop_task,
     get_tasks_by_date, get_tasks_by_date_range, get_tasks_by_category,

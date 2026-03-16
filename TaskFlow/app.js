@@ -48,6 +48,7 @@ app.get('/tasks/:id', async (req, res) => {
 //POST update task by ID
 app.put('/tasks/:id', async (req, res) => {
   const taskId = parseInt(req.params.id, 10);
+  const { title, description } = req.body;
   try{
     const taskUpdate = await prisma.task.update({
       where: {id: taskId},
@@ -56,7 +57,7 @@ app.put('/tasks/:id', async (req, res) => {
         description: description
       },
     })
-    res.status(201).json(taskUpdate);
+    res.status(200).json(taskUpdate);
   }
   catch(error){
     res.status(500).json({ error: 'Something went wrong' });
@@ -70,7 +71,7 @@ app.delete('/tasks/:id', async (req, res) => {
     const deleteTask = await prisma.task.delete({ where: {
       id: taskId,
     }});
-    res.status(201).json(deleteTask);
+    res.status(200).json(deleteTask);
   }
   catch (error){
     res.status(500).json({ error: 'Something went wrong' });
@@ -83,8 +84,8 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
-// Close the database connection on server shutdown
-process.on('SIGINT', () => {
-  close();
+// Close the database connection
+process.on('SIGINT', async () => {
+  await prisma.$disconnect();
   process.exit();
 });
