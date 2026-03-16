@@ -8,5 +8,24 @@ services:
         sync: false
       - key: ANTHROPIC_API_KEY
         sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: NOTION_API_KEY
+        sync: false
+      - key: NOTION_DATABASE_ID
+        sync: false
+      - key: NOTION_CALENDAR_URL
+        sync: false
+      - key: DASHBOARD_URL
+        sync: false
+      - key: DATA_DIR
+        value: /tmp
+
+  - type: web
+    name: life-agent-dashboard
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile.dashboard
+    envVars:
       - key: DATA_DIR
         value: /tmp
