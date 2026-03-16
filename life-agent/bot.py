@@ -1,25 +1,16 @@
 import os
 import tempfile
 import logging
+from openai import OpenAI
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
-from faster_whisper import WhisperModel
-from config import TELEGRAM_BOT_TOKEN, WHISPER_MODEL_SIZE
+from config import TELEGRAM_BOT_TOKEN, OPENAI_API_KEY
 from parser import parse_message
 from database import save_message
 
 logger = logging.getLogger(__name__)
 
-whisper_model = None
-
-
-def get_whisper_model():
-    global whisper_model
-    if whisper_model is None:
-        logger.info("Loading Whisper model (%s)...", WHISPER_MODEL_SIZE)
-        whisper_model = WhisperModel(WHISPER_MODEL_SIZE, device="cpu", compute_type="int8")
-        logger.info("Whisper model loaded.")
-    return whisper_model
+openai_client = OpenAI(api_key=OPENAI_API_KEY)
 
 
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -40,7 +31,6 @@ async def handle_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def handle_voice(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.effective_chat.id
-    await update.message.reply_text("Transcribing your voice message...")
 
     voice_file = await context.bot.get_file(update.message.voice.file_id)
 
@@ -49,9 +39,12 @@ async def handle_voice(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await voice_file.download_to_drive(tmp_path)
 
     try:
-        model = get_whisper_model()
-        segments, _ = model.transcribe(tmp_path)
-        transcript = " ".join(segment.text for segment in segments).strip()
+        with open(tmp_path, "rb") as audio:
+            transcription = openai_client.audio.transcriptions.create(
+                model="whisper-1",
+                file=audio,
+            )
+        transcript = transcription.text.strip()
     finally:
         os.unlink(tmp_path)
 

@@ -5,11 +5,11 @@ load_dotenv()
 
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 # On Render free tier, /tmp is used for SQLite — data resets on redeploy.
 # Will upgrade to persistent storage (Render Disk or external DB) later.
 DATA_DIR = os.getenv("DATA_DIR", os.path.dirname(__file__))
 DB_PATH = os.path.join(DATA_DIR, "life_agent.db")
-WHISPER_MODEL_SIZE = "base"
 
 USER_CONTEXT = """
 You are a personal life assistant for Aman. Here is context about him:
